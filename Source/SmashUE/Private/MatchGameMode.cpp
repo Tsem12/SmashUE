@@ -67,15 +67,15 @@ TSubclassOf<ASmashCharacter> AMatchGameMode::GetSmashCharacterClassFromInputType
 	
 	switch (InputType)
 	{
-	case EAutoReceiveInput::Player0:
-		return ArenaSettings->SmashCharacterClassP0;
-	case EAutoReceiveInput::Player1:
-		return ArenaSettings->SmashCharacterClassP1;
-	case EAutoReceiveInput::Player2:
-		return ArenaSettings->SmashCharacterClassP2;
-	case EAutoReceiveInput::Player3:
-		return ArenaSettings->SmashCharacterClassP3;
-	default:
-		return nullptr;
+		case EAutoReceiveInput::Player0:
+			return ArenaSettings->SmashCharacterClassP0;
+		case EAutoReceiveInput::Player1:
+			return ArenaSettings->SmashCharacterClassP1;
+		case EAutoReceiveInput::Player2:
+			return ArenaSettings->SmashCharacterClassP2;
+		case EAutoReceiveInput::Player3:
+			return ArenaSettings->SmashCharacterClassP3;
+		default:
+			return nullptr;
 	}
 }
