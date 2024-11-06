@@ -8,6 +8,7 @@
 
 
 class ASmashCharacter;
+class USmashCharacterState;
 /**
  * 
  */
@@ -24,4 +25,10 @@ public:
 protected:
 	UPROPERTY()
 	TObjectPtr<ASmashCharacter> Character;
+
+	TArray<USmashCharacterState*> AllStates;
+
+	void FindStates();
+
+	void InitStates();
 };

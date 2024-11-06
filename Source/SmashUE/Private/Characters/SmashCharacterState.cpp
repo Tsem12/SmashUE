@@ -4,6 +4,7 @@
 #include "Characters/SmashCharacterState.h"
 
 #include "Characters/SmashCharacterStateID.h"
+#include "Characters/SmashCharacterStateMachine.h"
 
 
 // Sets default values for this component's properties
@@ -19,6 +20,13 @@ USmashCharacterState::USmashCharacterState()
 ESmashCharacterStateID USmashCharacterState::GetStateID()
 {
 	return ESmashCharacterStateID::None;
+}
+
+void USmashCharacterState::InitState(USmashCharacterStateMachine* InStateMachine)
+{
+	StateMachine = InStateMachine;
+	Character = StateMachine->GetCharacter();
+	GEngine->AddOnScreenDebugMessage(-1, 3.f, FColor::Magenta, FString::Printf(TEXT("init State %d"), GetStateID()));
 }
 
 

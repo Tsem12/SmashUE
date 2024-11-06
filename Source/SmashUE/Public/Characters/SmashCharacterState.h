@@ -3,10 +3,13 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "SmashCharacterStateID.h"
 #include "Components/ActorComponent.h"
 #include "SmashCharacterState.generated.h"
 
 class SmashCharacterStateID;
+class ASmashCharacter;
+class USmashCharacterStateMachine;
 UCLASS(Abstract)
 class SMASHUE_API USmashCharacterState : public UActorComponent
 {
@@ -17,5 +20,12 @@ public:
 	USmashCharacterState();
 
 	virtual ESmashCharacterStateID GetStateID();
-	
+	void InitState(USmashCharacterStateMachine* InStateMachine);
+
+protected:
+	UPROPERTY()
+	TObjectPtr<ASmashCharacter> Character;
+
+	UPROPERTY()
+	TObjectPtr<USmashCharacterStateMachine> StateMachine;
 };

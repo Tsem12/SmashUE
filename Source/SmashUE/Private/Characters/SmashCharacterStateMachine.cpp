@@ -3,12 +3,39 @@
 
 #include "Characters/SmashCharacterStateMachine.h"
 
+#include "SmashCharacter.h"
+#include "Characters/SmashCharacterState.h"
+#include "Characters/SmashCharacterStateID.h"
+
 void USmashCharacterStateMachine::Init(ASmashCharacter* InCharacter)
 {
 	Character = InCharacter;
+	FindStates();
+	InitStates();
 }
 
 ASmashCharacter* USmashCharacterStateMachine::GetCharacter() const
 {
 	return Character;
+}
+
+void USmashCharacterStateMachine::FindStates()
+{
+	TArray<UActorComponent*> FoundComponents = Character->K2_GetComponentsByClass(USmashCharacterState::StaticClass());
+	for (UActorComponent* StateComponent : FoundComponents)
+	{
+		USmashCharacterState* State = Cast<USmashCharacterState>(StateComponent);
+		if(!State) continue;
+		if(State->GetStateID() == ESmashCharacterStateID::None) continue;
+
+		AllStates.Add(State);
+	}
+}
+
+void USmashCharacterStateMachine::InitStates()
+{
+	for (USmashCharacterState* State : AllStates)
+	{
+		State->InitState(this);
+	}
 }

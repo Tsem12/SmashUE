@@ -2,12 +2,3 @@
 
 
 #include "Characters/SmashCharacterStateID.h"
-
-
-SmashCharacterStateID::SmashCharacterStateID()
-{
-}
-
-SmashCharacterStateID::~SmashCharacterStateID()
-{
-}
