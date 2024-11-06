@@ -15,5 +15,6 @@ class SMASHUE_API USmashCharacterStateIdle : public USmashCharacterState
 
 public:
 	virtual ESmashCharacterStateID GetStateID() override;
-	
+	virtual void EnterState(ESmashCharacterStateID PreviousStateID) override;
+	virtual void ExitState(ESmashCharacterStateID NextStateID) override;
 };

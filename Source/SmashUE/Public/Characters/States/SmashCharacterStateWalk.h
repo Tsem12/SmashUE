@@ -14,5 +14,7 @@ class SMASHUE_API USmashCharacterStateWalk : public USmashCharacterState
 	GENERATED_BODY()
 
 public:
-	ESmashCharacterStateID GetStateID() override;
+	virtual ESmashCharacterStateID GetStateID() override;
+	virtual void EnterState(ESmashCharacterStateID PreviousStateID) override;
+	virtual void ExitState(ESmashCharacterStateID NextStateID) override;
 };

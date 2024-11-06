@@ -22,6 +22,10 @@ public:
 	virtual ESmashCharacterStateID GetStateID();
 	void InitState(USmashCharacterStateMachine* InStateMachine);
 
+	virtual void EnterState(ESmashCharacterStateID PreviousStateID);
+	
+	virtual void ExitState(ESmashCharacterStateID NextStateID);
+	
 protected:
 	UPROPERTY()
 	TObjectPtr<ASmashCharacter> Character;
