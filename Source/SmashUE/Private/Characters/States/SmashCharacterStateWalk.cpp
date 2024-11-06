@@ -16,6 +16,12 @@ void USmashCharacterStateWalk::ExitState(ESmashCharacterStateID NextStateID)
 	GEngine->AddOnScreenDebugMessage(-1, 3.0f, FColor::Red, FString(TEXT("Exit StateWalk")));
 }
 
+void USmashCharacterStateWalk::StateTick(float DeltaTime)
+{
+	Super::StateTick(DeltaTime);
+	GEngine->AddOnScreenDebugMessage(-1, 3.f, FColor::Green, TEXT("TickStateWalk"));
+}
+
 void USmashCharacterStateWalk::EnterState(ESmashCharacterStateID PreviousStateID)
 {
 	Super::EnterState(PreviousStateID);

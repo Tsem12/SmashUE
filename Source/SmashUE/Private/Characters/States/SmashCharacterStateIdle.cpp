@@ -17,6 +17,13 @@ void USmashCharacterStateIdle::ExitState(ESmashCharacterStateID NextStateID)
 	GEngine->AddOnScreenDebugMessage(-1, 3.0f, FColor::Red, FString(TEXT("Exit StateIdle")));
 }
 
+void USmashCharacterStateIdle::StateTick(float DeltaTime)
+{
+	Super::StateTick(DeltaTime);
+
+	GEngine->AddOnScreenDebugMessage(-1, 3.f, FColor::Green, TEXT("TickStateIdle"));
+}
+
 void USmashCharacterStateIdle::EnterState(ESmashCharacterStateID PreviousStateID)
 {
 	Super::EnterState(PreviousStateID);

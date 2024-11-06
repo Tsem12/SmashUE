@@ -17,7 +17,7 @@ class SMASHUE_API ASmashCharacter : public ACharacter
 public:
 	// Sets default values for this character's properties
 	ASmashCharacter();
-
+	
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -47,6 +47,8 @@ public:
 	void CreateStateMachine();
 
 	void InitStateMachine();
+
+	void TickStateMachine(float DeltaTime) const; 
 
 protected:
 	UPROPERTY(BlueprintReadOnly)

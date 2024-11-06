@@ -20,11 +20,13 @@ public:
 	USmashCharacterState();
 
 	virtual ESmashCharacterStateID GetStateID();
-	void InitState(USmashCharacterStateMachine* InStateMachine);
+	virtual void InitState(USmashCharacterStateMachine* InStateMachine);
 
 	virtual void EnterState(ESmashCharacterStateID PreviousStateID);
 	
 	virtual void ExitState(ESmashCharacterStateID NextStateID);
+
+	virtual void StateTick(float DeltaTime);
 	
 protected:
 	UPROPERTY()
