@@ -3,8 +3,11 @@
 
 #include "Characters/SmashCharacterState.h"
 
+#include "SmashCharacter.h"
 #include "Characters/SmashCharacterStateID.h"
 #include "Characters/SmashCharacterStateMachine.h"
+#include "GameFramework/CharacterMovementComponent.h"
+#include "GameFramework/PawnMovementComponent.h"
 
 
 // Sets default values for this component's properties

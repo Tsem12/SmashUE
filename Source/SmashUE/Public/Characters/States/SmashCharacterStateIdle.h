@@ -18,4 +18,8 @@ public:
 	virtual void EnterState(ESmashCharacterStateID PreviousStateID) override;
 	virtual void ExitState(ESmashCharacterStateID NextStateID) override;
 	virtual void StateTick(float DeltaTime) override;
+
+protected:
+	UPROPERTY(EditAnywhere)
+	TObjectPtr<UAnimMontage> IdleAnim;
 };

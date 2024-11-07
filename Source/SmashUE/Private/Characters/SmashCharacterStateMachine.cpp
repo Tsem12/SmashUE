@@ -40,7 +40,7 @@ void USmashCharacterStateMachine::ChangeState(ESmashCharacterStateID NextStateID
 	ESmashCharacterStateID PreviousStateID = CurrentStateID;
 	CurrentStateID = NextStateID;
 	CurrentState = NextState;
-	if(!CurrentState)
+	if(CurrentState)
 	{
 		NextState->EnterState(PreviousStateID);
 	}

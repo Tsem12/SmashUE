@@ -3,7 +3,9 @@
 
 #include "Characters/States/SmashCharacterStateWalk.h"
 
+#include "SmashCharacter.h"
 #include "Characters/SmashCharacterStateID.h"
+#include "GameFramework/CharacterMovementComponent.h"
 
 ESmashCharacterStateID USmashCharacterStateWalk::GetStateID()
 {
@@ -19,12 +21,15 @@ void USmashCharacterStateWalk::ExitState(ESmashCharacterStateID NextStateID)
 void USmashCharacterStateWalk::StateTick(float DeltaTime)
 {
 	Super::StateTick(DeltaTime);
-	GEngine->AddOnScreenDebugMessage(-1, 3.f, FColor::Green, TEXT("TickStateWalk"));
+	Character->AddMovementInput(Character->GetActorForwardVector(), 1);
+	//GEngine->AddOnScreenDebugMessage(-1, 3.f, FColor::Green, TEXT("TickStateWalk"));
 }
 
 void USmashCharacterStateWalk::EnterState(ESmashCharacterStateID PreviousStateID)
 {
 	Super::EnterState(PreviousStateID);
-
 	GEngine->AddOnScreenDebugMessage(-1, 3.0f, FColor::Cyan, FString(TEXT("Enter StateWalk")));
+	Character->PlayAnimMontage(WalkAnim);
+	Character->GetCharacterMovement()->SetMovementMode(MOVE_Walking);
+	Character->GetCharacterMovement()->MaxWalkSpeed = MoveSpeedMax;
 }
