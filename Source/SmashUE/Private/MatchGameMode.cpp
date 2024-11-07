@@ -2,12 +2,13 @@
 
 
 #include "MatchGameMode.h"
-
+#include "Arena/ArenaPlayerStart.h"
 #include "ArenaSettings.h"
 #include "SmashCharacter.h"
-#include "Arena/ArenaPlayerStart.h"
+#include "Characters/SmashCharacterSettings.h"
+#include "Characters/SmashCharacterInputData.h"
+#include "InputMappingContext.h"
 #include "Kismet/GameplayStatics.h"
-
 
 void AMatchGameMode::BeginPlay()
 {
@@ -24,6 +25,21 @@ void AMatchGameMode::BeginPlay()
 		GEngine->AddOnScreenDebugMessage(-1, 3.f, FColor::Cyan, SmashCharacterClass->GetFName().ToString());
 	}
 	SpawnCharacters(PlayerStartsPoints);
+}
+
+USmashCharacterInputData* AMatchGameMode::LoadInputDataFromConfig()
+{
+	const USmashCharacterSettings* CharacterSettings = GetDefault<USmashCharacterSettings>();
+	if (!CharacterSettings) return nullptr;
+	return CharacterSettings->InputData.LoadSynchronous();
+	
+}
+
+UInputMappingContext* AMatchGameMode::LoadInputMappingContetFromConfig()
+{
+	const USmashCharacterSettings* CharacterSettings = GetDefault<USmashCharacterSettings>();
+	if (!CharacterSettings) return nullptr;
+	return CharacterSettings->InputMappingContext.LoadSynchronous();
 }
 
 
