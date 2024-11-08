@@ -5,6 +5,7 @@
 
 #include "SmashCharacter.h"
 #include "Characters/SmashCharacterStateID.h"
+#include "Characters/SmashCharacterStateMachine.h"
 
 
 ESmashCharacterStateID USmashCharacterStateIdle::GetStateID()
@@ -21,7 +22,12 @@ void USmashCharacterStateIdle::ExitState(ESmashCharacterStateID NextStateID)
 void USmashCharacterStateIdle::StateTick(float DeltaTime)
 {
 	Super::StateTick(DeltaTime);
-	//GEngine->AddOnScreenDebugMessage(-1, 3.f, FColor::Green, TEXT("TickStateIdle"));
+	GEngine->AddOnScreenDebugMessage(-1, 0.1f, FColor::Green, TEXT("TickStateIdle"));
+
+	if(FMath::Abs(Character->GetInputMoveX()) > 0.1f)
+	{
+		StateMachine->ChangeState(ESmashCharacterStateID::Walk);
+	}
 }
 
 void USmashCharacterStateIdle::EnterState(ESmashCharacterStateID PreviousStateID)

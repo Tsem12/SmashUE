@@ -5,6 +5,7 @@
 
 #include "SmashCharacter.h"
 #include "Characters/SmashCharacterStateID.h"
+#include "Characters/SmashCharacterStateMachine.h"
 #include "GameFramework/CharacterMovementComponent.h"
 
 ESmashCharacterStateID USmashCharacterStateWalk::GetStateID()
@@ -21,8 +22,16 @@ void USmashCharacterStateWalk::ExitState(ESmashCharacterStateID NextStateID)
 void USmashCharacterStateWalk::StateTick(float DeltaTime)
 {
 	Super::StateTick(DeltaTime);
-	Character->AddMovementInput(Character->GetActorForwardVector(), 1);
-	//GEngine->AddOnScreenDebugMessage(-1, 3.f, FColor::Green, TEXT("TickStateWalk"));
+	GEngine->AddOnScreenDebugMessage(-1, 0.1f, FColor::Green, TEXT("TickStateWalk"));
+	if(FMath::Abs(Character->GetInputMoveX()) < 0.1f)
+	{
+		StateMachine->ChangeState(ESmashCharacterStateID::Idle);
+	}
+	else
+	{
+		Character->SetOrientX(Character->GetInputMoveX());
+		Character->AddMovementInput(Character->GetActorForwardVector(), Character->GetOrientX());
+	}
 }
 
 void USmashCharacterStateWalk::EnterState(ESmashCharacterStateID PreviousStateID)
