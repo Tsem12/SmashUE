@@ -13,10 +13,17 @@ ESmashCharacterStateID USmashCharacterStateIdle::GetStateID()
 	return ESmashCharacterStateID::Idle;
 }
 
+void USmashCharacterStateIdle::OnInputMoveXFast(float InputMoveX)
+{
+	StateMachine->ChangeState(ESmashCharacterStateID::Run);
+}
+
 void USmashCharacterStateIdle::ExitState(ESmashCharacterStateID NextStateID)
 {
 	Super::ExitState(NextStateID);
 	GEngine->AddOnScreenDebugMessage(-1, 3.0f, FColor::Red, FString(TEXT("Exit StateIdle")));
+
+	Character->InputMoveXFastEvent.RemoveDynamic(this,  &USmashCharacterStateIdle::OnInputMoveXFast);
 }
 
 void USmashCharacterStateIdle::StateTick(float DeltaTime)
@@ -24,7 +31,7 @@ void USmashCharacterStateIdle::StateTick(float DeltaTime)
 	Super::StateTick(DeltaTime);
 	GEngine->AddOnScreenDebugMessage(-1, 0.1f, FColor::Green, TEXT("TickStateIdle"));
 
-	if(FMath::Abs(Character->GetInputMoveX()) > 0.1f)
+	if(FMath::Abs(Character->GetInputMoveX()) > Character->GetInputMoveXTreshold())
 	{
 		StateMachine->ChangeState(ESmashCharacterStateID::Walk);
 	}
@@ -35,5 +42,8 @@ void USmashCharacterStateIdle::EnterState(ESmashCharacterStateID PreviousStateID
 	Super::EnterState(PreviousStateID);
 	GEngine->AddOnScreenDebugMessage(-1, 3.0f, FColor::Cyan, FString(TEXT("Enter StateIdle")));
 	Character->PlayAnimMontage(IdleAnim);
+
+	Character->InputMoveXFastEvent.AddDynamic(this,  &USmashCharacterStateIdle::OnInputMoveXFast);
+	
 }
 

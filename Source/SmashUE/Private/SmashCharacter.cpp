@@ -56,17 +56,45 @@ float ASmashCharacter::GetInputMoveX()
 	return InputMoveX;
 }
 
+float ASmashCharacter::GetInputMoveXTreshold()
+{
+	return InputMoveXTreshold;
+}
+
+void ASmashCharacter::SetInputMoveXTreshold(float value)
+{
+	InputMoveXTreshold = value;
+}
+
+
 void ASmashCharacter::BindInputMoveXAxisAndActions(UEnhancedInputComponent* EnhancedInputComponent)
 {
-	EnhancedInputComponent->BindAction(InputData->InputActionMoveX, ETriggerEvent::Started, this, &ASmashCharacter::OnInputMoveX);
-	EnhancedInputComponent->BindAction(InputData->InputActionMoveX, ETriggerEvent::Triggered, this, &ASmashCharacter::OnInputMoveX);
-	EnhancedInputComponent->BindAction(InputData->InputActionMoveX, ETriggerEvent::Completed, this, &ASmashCharacter::OnInputMoveX);
+	if(!InputData) return;
+	
+	if(InputData->InputActionMoveX)
+	{
+		EnhancedInputComponent->BindAction(InputData->InputActionMoveX, ETriggerEvent::Started, this, &ASmashCharacter::OnInputMoveX);
+		EnhancedInputComponent->BindAction(InputData->InputActionMoveX, ETriggerEvent::Triggered, this, &ASmashCharacter::OnInputMoveX);
+		EnhancedInputComponent->BindAction(InputData->InputActionMoveX, ETriggerEvent::Completed, this, &ASmashCharacter::OnInputMoveX);
+	}
+
+	if(InputData->InputActionMoveXFast)
+	{
+		EnhancedInputComponent->BindAction(InputData->InputActionMoveXFast, ETriggerEvent::Started, this, &ASmashCharacter::OnInputMoveXFast);
+	}
 }
 
 void ASmashCharacter::OnInputMoveX(const FInputActionValue& InputActionValue)
 {
 	InputMoveX = InputActionValue.Get<float>();
 }
+
+void ASmashCharacter::OnInputMoveXFast(const FInputActionValue& InputActionValue)
+{
+	InputMoveX = InputActionValue.Get<float>();
+	InputMoveXFastEvent.Broadcast(InputMoveX);
+}
+
 
 void ASmashCharacter::SetOrientX(float NewOrientX)
 {

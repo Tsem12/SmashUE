@@ -28,7 +28,8 @@ private:
 	USmashCharacterInputData* LoadInputDataFromConfig();
 
 	UInputMappingContext* LoadInputMappingContetFromConfig();
-	
+	float LoadInputTresholdFromConfig();
+
 	void FindPlayerStartActorsInArena(TArray<AArenaPlayerStart*>& ResulActors);
 
 	void SpawnCharacters(const TArray<AArenaPlayerStart*>& SpawnPoints);
