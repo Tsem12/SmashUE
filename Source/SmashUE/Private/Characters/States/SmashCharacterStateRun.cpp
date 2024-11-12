@@ -1,8 +1,9 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #pragma once
-#include "SmashCharacter.h"
+
 #include "Characters/States/SmashCharacterStateRun.h"
+#include "SmashCharacter.h"
 
 #include "Characters/SmashCharacterStateMachine.h"
 #include "GameFramework/CharacterMovementComponent.h"

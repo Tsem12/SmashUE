@@ -23,3 +23,8 @@ void USmashCharacterStateJump::ExitState(ESmashCharacterStateID NextStateID)
 	Super::ExitState(NextStateID);
 	GEngine->AddOnScreenDebugMessage(-1, 3.0f, FColor::Red, FString(TEXT("Exit StateJump")));
 }
+
+void USmashCharacterStateJump::StateTick(float DeltaTime)
+{
+	Super::StateTick(DeltaTime);
+}

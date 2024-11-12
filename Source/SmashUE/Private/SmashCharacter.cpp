@@ -4,6 +4,7 @@
 #include "SmashCharacter.h"
 #include "EnhancedInputSubsystems.h"
 #include "EnhancedInputComponent.h"
+#include "Camera/Camera/CameraWorldSubsytem.h"
 #include "Characters/SmashCharacterInputData.h"
 
 #include "Characters/SmashCharacterStateMachine.h"
@@ -21,8 +22,10 @@ void ASmashCharacter::BeginPlay()
 {
 	Super::BeginPlay();
 	CreateStateMachine();
-
 	InitStateMachine();
+	UCameraWorldSubsytem* CameraWorldSubsytem = Cast<UCameraWorldSubsytem>(GetWorld()->GetSubsystem<UCameraWorldSubsytem>());
+	if(!CameraWorldSubsytem) return;
+	CameraWorldSubsytem->AddFollowTarget(this);
 }
 
 // Called every frame
