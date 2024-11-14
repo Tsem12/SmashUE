@@ -4,7 +4,7 @@
 #include "SmashCharacter.h"
 #include "EnhancedInputSubsystems.h"
 #include "EnhancedInputComponent.h"
-#include "Camera/Camera/CameraWorldSubsytem.h"
+#include "Camera/CameraWorldSubsytem.h"
 #include "Characters/SmashCharacterInputData.h"
 
 #include "Characters/SmashCharacterStateMachine.h"
@@ -92,6 +92,8 @@ void ASmashCharacter::OnInputMoveX(const FInputActionValue& InputActionValue)
 	InputMoveX = InputActionValue.Get<float>();
 }
 
+
+
 void ASmashCharacter::OnInputMoveXFast(const FInputActionValue& InputActionValue)
 {
 	InputMoveX = InputActionValue.Get<float>();
@@ -141,6 +143,20 @@ void ASmashCharacter::SetupMappingContextIntoController() const
 
 	InputSystem->AddMappingContext(InputMappingContext, 0);
 }
+
+#pragma region FollowTarget
+
+FVector ASmashCharacter::GetFollowPosition()
+{
+	return GetActorLocation();
+}
+
+bool ASmashCharacter::IsFollowable()
+{
+	return true;
+}
+
+#pragma endregion 
 
 
 

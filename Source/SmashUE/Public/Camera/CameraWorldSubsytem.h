@@ -34,11 +34,11 @@ protected:
 
 #pragma region FollowTarget
 public:
-	void AddFollowTarget(AActor* FollowTarget);
-	void RemoveFollowTarget(AActor* FollowTarget);
+	void AddFollowTarget(UObject* FollowTarget);
+	void RemoveFollowTarget(UObject* FollowTarget);
 protected:
 	UPROPERTY()
-	TArray<AActor*> FollowTargets;
+	TArray<UObject*> FollowTargets;
 #pragma endregion
 
 #pragma region Misc

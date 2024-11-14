@@ -4,6 +4,7 @@
 #include "Camera/CameraWorldSubsytem.h"
 
 #include "Camera/CameraComponent.h"
+#include "Camera/CameraFollowTarget.h"
 #include "Kismet/GameplayStatics.h"
 
 void UCameraWorldSubsytem::PostInitialize()
@@ -29,12 +30,12 @@ void UCameraWorldSubsytem::Tick(float DeltaTime)
 	TickUpdateCameraPosition(DeltaTime);
 }
 
-void UCameraWorldSubsytem::AddFollowTarget(AActor* FollowTarget)
+void UCameraWorldSubsytem::AddFollowTarget(UObject* FollowTarget)
 {
 	FollowTargets.Add(FollowTarget);
 }
 
-void UCameraWorldSubsytem::RemoveFollowTarget(AActor* FollowTarget)
+void UCameraWorldSubsytem::RemoveFollowTarget(UObject* FollowTarget)
 {
 	FollowTargets.Remove(FollowTarget);
 }
@@ -52,11 +53,17 @@ void UCameraWorldSubsytem::TickUpdateCameraPosition(float DeltaTime)
 FVector UCameraWorldSubsytem::CalculateAveragePositionBetweenTargets()
 {
 	FVector AveragePosition;
-	for (AActor* Target : FollowTargets)
+	int FollowableCount = 0;
+	for (UObject* Target : FollowTargets)
 	{
-		AveragePosition += Target->GetTransform().GetLocation();
+		ICameraFollowTarget* CamTarget = Cast<ICameraFollowTarget>(Target);
+		if(CamTarget && CamTarget->IsFollowable())
+		{
+			AveragePosition += CamTarget->GetFollowPosition();
+			FollowableCount++;
+		}
 	}
-	AveragePosition /= FollowTargets.Num();
+	AveragePosition /= FollowableCount;
 	return AveragePosition;
 }
 
@@ -149,7 +156,7 @@ FVector UCameraWorldSubsytem::CalculateWorldPositionFromViewportPosition(const F
 		WorldPosition,
 		CameraWorldProjectDir
 		);
-	WorldPosition += CameraWorldProjectDir + YDistanceToCenter;
+	WorldPosition += CameraWorldProjectDir * YDistanceToCenter;
 
 	return WorldPosition;
 }
