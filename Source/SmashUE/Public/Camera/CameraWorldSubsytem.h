@@ -6,6 +6,7 @@
 #include "Subsystems/WorldSubsystem.h"
 #include "CameraWorldSubsytem.generated.h"
 
+class UCameraSettings;
 /**
  * 
  */
@@ -50,6 +51,9 @@ protected:
 #pragma region Misc
 protected:
 	UCameraComponent* FindCameraByTag(const FName& Tag) const;
+
+	UPROPERTY()
+	TObjectPtr<const UCameraSettings> CameraSettings;
 #pragma endregion
 
 #pragma region Bounds
@@ -64,7 +68,7 @@ protected:
 	float CameraBoundYprojectionCenter;
 
 	AActor* FindCameraBounds(FName Tag);
-
+	
 	void InitCameraBounds(AActor* CameraBoundsActor);
 
 	void ClampPositionIntoCameraBounds(FVector& Position);
