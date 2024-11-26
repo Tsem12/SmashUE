@@ -45,8 +45,6 @@ void UCameraWorldSubsytem::RemoveFollowTarget(UObject* FollowTarget)
 	FollowTargets.Remove(FollowTarget);
 }
 
-
-
 void UCameraWorldSubsytem::TickUpdateCameraPosition(float DeltaTime)
 {
 	if(!CameraMain) return;

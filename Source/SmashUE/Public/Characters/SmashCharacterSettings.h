@@ -6,6 +6,7 @@
 #include "Engine/DeveloperSettings.h"
 #include "SmashCharacterSettings.generated.h"
 
+class USmashCharacterState;
 /**
  * 
  */
@@ -26,4 +27,7 @@ public:
 	
 	UPROPERTY(Config, EditAnywhere, Category="Inputs")
 	float InputMoveXThreshold = 0.1f;
+	
+	UPROPERTY(Config, EditAnywhere, Category="States")
+	TArray<TSubclassOf<USmashCharacterState>> GenericStates;
 };

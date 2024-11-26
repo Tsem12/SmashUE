@@ -18,25 +18,29 @@ void USmashCharacterStateWalk::OnInputMoveXFast(float InputMoveX)
 	StateMachine->ChangeState(ESmashCharacterStateID::Run);
 }
 
-void USmashCharacterStateWalk::ExitState(ESmashCharacterStateID NextStateID)
+void USmashCharacterStateWalk::OnInputMoveJump(float InputMoveJump)
 {
-	Super::ExitState(NextStateID);
-	GEngine->AddOnScreenDebugMessage(-1, 3.0f, FColor::Red, FString(TEXT("Exit StateWalk")));
-	Character->InputMoveXFastEvent.RemoveDynamic(this,  &USmashCharacterStateWalk::OnInputMoveXFast);
+	StateMachine->ChangeState(ESmashCharacterStateID::Jump);
 }
+
 
 void USmashCharacterStateWalk::StateTick(float DeltaTime)
 {
 	Super::StateTick(DeltaTime);
-	GEngine->AddOnScreenDebugMessage(-1, 0.1f, FColor::Green,TEXT("TickStateWalk"));
+	//GEngine->AddOnScreenDebugMessage(-1, 0.1f, FColor::Green,TEXT("TickStateWalk"));
 	if(FMath::Abs(Character->GetInputMoveX()) < Character->GetInputMoveXTreshold())
 	{
 		StateMachine->ChangeState(ESmashCharacterStateID::Idle);
 	}
 	else
 	{
-		Character->SetOrientX(Character->GetInputMoveX());
+		Character->SetOrientX(FMath::Sign(Character->GetInputMoveX()));
 		Character->AddMovementInput(Character->GetActorForwardVector(), Character->GetOrientX());
+	}
+
+	if(Character->GetCharacterMovement()->IsFalling())
+	{
+		StateMachine->ChangeState(ESmashCharacterStateID::Fall);
 	}
 }
 
@@ -48,4 +52,13 @@ void USmashCharacterStateWalk::EnterState(ESmashCharacterStateID PreviousStateID
 	Character->GetCharacterMovement()->SetMovementMode(MOVE_Walking);
 	Character->GetCharacterMovement()->MaxWalkSpeed = MoveSpeedMax;
 	Character->InputMoveXFastEvent.AddDynamic(this,  &USmashCharacterStateWalk::OnInputMoveXFast);
+	Character->InputJumpEvent.AddDynamic(this,  &USmashCharacterStateWalk::OnInputMoveJump);
+}
+
+void USmashCharacterStateWalk::ExitState(ESmashCharacterStateID NextStateID)
+{
+	Super::ExitState(NextStateID);
+	GEngine->AddOnScreenDebugMessage(-1, 3.0f, FColor::Red, FString(TEXT("Exit StateWalk")));
+	Character->InputMoveXFastEvent.RemoveDynamic(this,  &USmashCharacterStateWalk::OnInputMoveXFast);
+	Character->InputJumpEvent.RemoveDynamic(this,  &USmashCharacterStateWalk	::OnInputMoveJump);
 }

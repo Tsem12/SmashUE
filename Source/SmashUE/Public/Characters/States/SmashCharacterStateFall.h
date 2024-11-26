@@ -14,6 +14,9 @@ class SMASHUE_API USmashCharacterStateFall : public USmashCharacterState
 	GENERATED_BODY()
 
 public:
+	UFUNCTION()
+	void OnInputSpecialPressed();
+	
 	virtual ESmashCharacterStateID GetStateID() override;
 	virtual void EnterState(ESmashCharacterStateID PreviousStateID) override;
 	virtual void ExitState(ESmashCharacterStateID NextStateID) override;

@@ -4,6 +4,7 @@
 #include "Characters/States/SmashCharacterStateJump.h"
 
 #include "SmashCharacter.h"
+#include "Characters/SmashCharacterStateMachine.h"
 
 ESmashCharacterStateID USmashCharacterStateJump::GetStateID()
 {
@@ -15,6 +16,7 @@ void USmashCharacterStateJump::EnterState(ESmashCharacterStateID PreviousStateID
 	Super::EnterState(PreviousStateID);
 	GEngine->AddOnScreenDebugMessage(-1, 3.0f, FColor::Cyan, FString(TEXT("Enter StateJump")));
 	Character->PlayAnimMontage(JumpAnim);
+	Character->Jump();
 }
 
 
@@ -27,4 +29,8 @@ void USmashCharacterStateJump::ExitState(ESmashCharacterStateID NextStateID)
 void USmashCharacterStateJump::StateTick(float DeltaTime)
 {
 	Super::StateTick(DeltaTime);
+	if(Character->GetVelocity().Z < 0)
+	{
+		StateMachine->ChangeState(ESmashCharacterStateID::Fall);
+	}
 }

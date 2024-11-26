@@ -10,8 +10,8 @@
 class SmashCharacterStateID;
 class ASmashCharacter;
 class USmashCharacterStateMachine;
-UCLASS(Abstract)
-class SMASHUE_API USmashCharacterState : public UActorComponent
+UCLASS(Abstract, Blueprintable)
+class SMASHUE_API USmashCharacterState : public UObject
 {
 	GENERATED_BODY()
 
@@ -34,4 +34,6 @@ protected:
 
 	UPROPERTY()
 	TObjectPtr<USmashCharacterStateMachine> StateMachine;
+
+	ESmashCharacterStateID PreviousState;
 };

@@ -6,6 +6,8 @@
 #include "EnhancedInputComponent.h"
 #include "Camera/CameraWorldSubsytem.h"
 #include "Characters/SmashCharacterInputData.h"
+#include "Characters/SmashCharacterSettings.h"
+#include "Characters/SmashCharacterState.h"
 
 #include "Characters/SmashCharacterStateMachine.h"
 
@@ -21,6 +23,7 @@ ASmashCharacter::ASmashCharacter()
 void ASmashCharacter::BeginPlay()
 {
 	Super::BeginPlay();
+	CreateStates();
 	CreateStateMachine();
 	InitStateMachine();
 	UCameraWorldSubsytem* CameraWorldSubsytem = Cast<UCameraWorldSubsytem>(GetWorld()->GetSubsystem<UCameraWorldSubsytem>());
@@ -41,12 +44,12 @@ void ASmashCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComp
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 
-	SetupMappingContextIntoController();
-
 	UEnhancedInputComponent* EnhancedInputComponent = Cast<UEnhancedInputComponent>(PlayerInputComponent);
 	if(!EnhancedInputComponent) return;
 
 	BindInputMoveXAxisAndActions(EnhancedInputComponent);
+	BindInputMoveYAxisAndActions(EnhancedInputComponent);
+	BindInputButtons(EnhancedInputComponent);
 }
 
 float ASmashCharacter::GetOrientX() const
@@ -87,11 +90,50 @@ void ASmashCharacter::BindInputMoveXAxisAndActions(UEnhancedInputComponent* Enha
 	}
 }
 
+void ASmashCharacter::BindInputMoveYAxisAndActions(UEnhancedInputComponent* EnhancedInputComponent)
+{
+	if(!InputData) return;
+	
+	if(InputData->InputActionMoveX)
+	{
+		EnhancedInputComponent->BindAction(InputData->InputActionJump, ETriggerEvent::Started, this, &ASmashCharacter::OnInputMoveY);
+		EnhancedInputComponent->BindAction(InputData->InputActionJump, ETriggerEvent::Triggered, this, &ASmashCharacter::OnInputMoveY);
+		EnhancedInputComponent->BindAction(InputData->InputActionJump, ETriggerEvent::Completed, this, &ASmashCharacter::OnInputMoveY);
+	}
+}
+
+void ASmashCharacter::BindInputButtons(UEnhancedInputComponent* EnhancedInputComponent)
+{
+	if(!InputData) return;
+	
+	if(InputData->InputActionMoveX)
+	{
+		EnhancedInputComponent->BindAction(InputData->InputSpecial, ETriggerEvent::Started, this, &ASmashCharacter::OnSpecialPressed);
+		EnhancedInputComponent->BindAction(InputData->InputSpecial, ETriggerEvent::Completed, this, &ASmashCharacter::OnSpecialReleased);
+	}
+}
+
+void ASmashCharacter::OnSpecialPressed()
+{
+	InputSpecialPressed.Broadcast();
+}
+
+void ASmashCharacter::OnSpecialReleased()
+{
+	InputSpecialReleased.Broadcast();
+}
+
+
 void ASmashCharacter::OnInputMoveX(const FInputActionValue& InputActionValue)
 {
 	InputMoveX = InputActionValue.Get<float>();
 }
 
+void ASmashCharacter::OnInputMoveY(const FInputActionValue& InputActionValue)
+{
+	InputMoveY = InputActionValue.Get<float>();
+	InputJumpEvent.Broadcast(InputMoveX);
+}
 
 
 void ASmashCharacter::OnInputMoveXFast(const FInputActionValue& InputActionValue)
@@ -111,6 +153,19 @@ void ASmashCharacter::RotateMeshUsingOrientX() const
 	FRotator Rotation = GetMesh()->GetRelativeRotation();
 	Rotation.Yaw = -90 * OrientX;
 	GetMesh()->SetRelativeRotation(Rotation);
+}
+
+void ASmashCharacter::CreateStates()
+{
+	const USmashCharacterSettings* SmashCharacterSettings = GetDefault<USmashCharacterSettings>();
+	for (TSubclassOf<USmashCharacterState> State : SmashCharacterSettings->GenericStates)
+	{
+		NewObject<USmashCharacterState>(this, State);
+	}
+	for (TSubclassOf<USmashCharacterState> State : CharacterStates)
+	{
+		NewObject<USmashCharacterState>(this, State);
+	}
 }
 
 void ASmashCharacter::CreateStateMachine()

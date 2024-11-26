@@ -13,6 +13,12 @@ ESmashCharacterStateID USmashCharacterStateRun::GetStateID()
 	return ESmashCharacterStateID::Run;
 }
 
+void USmashCharacterStateRun::OnInputMoveJump(float InputMoveJump)
+{
+	StateMachine->ChangeState(ESmashCharacterStateID::Jump);
+}
+
+
 void USmashCharacterStateRun::EnterState(ESmashCharacterStateID PreviousStateID)
 {
 	Super::EnterState(PreviousStateID);
@@ -20,12 +26,15 @@ void USmashCharacterStateRun::EnterState(ESmashCharacterStateID PreviousStateID)
 	Character->PlayAnimMontage(RunAnim);
 	Character->GetCharacterMovement()->SetMovementMode(MOVE_Walking);
 	Character->GetCharacterMovement()->MaxWalkSpeed = MoveSpeedMax;
+
+	Character->InputJumpEvent.AddDynamic(this,  &USmashCharacterStateRun::OnInputMoveJump);
 }
 
 void USmashCharacterStateRun::ExitState(ESmashCharacterStateID NextStateID)
 {
 	Super::ExitState(NextStateID);
 	GEngine->AddOnScreenDebugMessage(-1, 3.0f, FColor::Red, FString(TEXT("Exit StateRun")));
+	Character->InputJumpEvent.RemoveDynamic(this,  &USmashCharacterStateRun::OnInputMoveJump);
 }
 
 void USmashCharacterStateRun::StateTick(float DeltaTime)
@@ -39,9 +48,14 @@ void USmashCharacterStateRun::StateTick(float DeltaTime)
 	}
 	else
 	{
-		Character->SetOrientX(Character->GetInputMoveX());
+		Character->SetOrientX(FMath::Sign(Character->GetInputMoveX()));
 		Character->AddMovementInput(Character->GetActorForwardVector(), Character->GetOrientX());
 	}
+
+	if(Character->GetCharacterMovement()->IsFalling())
+	{
+		StateMachine->ChangeState(ESmashCharacterStateID::Fall);
+	}	
 }
 
 

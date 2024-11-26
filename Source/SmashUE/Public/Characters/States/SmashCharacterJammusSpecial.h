@@ -4,29 +4,24 @@
 
 #include "CoreMinimal.h"
 #include "Characters/SmashCharacterState.h"
-#include "SmashCharacterStateRun.generated.h"
+#include "SmashCharacterJammusSpecial.generated.h"
 
-class SmashCharacterStateID;
 
-UCLASS(ClassGroup=(SmashCharacterState), meta=(BlueprintSpawnableComponent))
-class SMASHUE_API USmashCharacterStateRun : public USmashCharacterState
+UCLASS(ClassGroup=(Custom), meta=(BlueprintSpawnableComponent))
+class SMASHUE_API USmashCharacterJammusSpecial : public USmashCharacterState
 {
 	GENERATED_BODY()
 
-
 public:
-	UFUNCTION()
-	void OnInputMoveJump(float InputMoveJump);
-	
 	virtual ESmashCharacterStateID GetStateID() override;
 	virtual void EnterState(ESmashCharacterStateID PreviousStateID) override;
 	virtual void ExitState(ESmashCharacterStateID NextStateID) override;
 	virtual void StateTick(float DeltaTime) override;
+	
+	UFUNCTION()
+	void OnSpecialReleased();
 
 protected:
 	UPROPERTY(EditAnywhere)
-	float MoveSpeedMax = 500;
-
-	UPROPERTY(EditAnywhere)
-	TObjectPtr<UAnimMontage> RunAnim; 
+	TObjectPtr<UAnimMontage> SpecialAnim; 
 };

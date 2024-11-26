@@ -8,6 +8,7 @@
 #include "GameFramework/Character.h"
 #include "SmashCharacter.generated.h"
 
+class USmashCharacterState;
 class USmashCharacterInputData;
 class UInputMappingContext;
 class USmashCharacterStateMachine;
@@ -49,6 +50,8 @@ protected:
 
 #pragma region StateMachine
 public:
+	void CreateStates();
+	
 	void CreateStateMachine();
 
 	void InitStateMachine();
@@ -59,8 +62,12 @@ protected:
 	UPROPERTY(BlueprintReadOnly)
 	TObjectPtr<USmashCharacterStateMachine> StateMachine;
 
+	UPROPERTY(EditAnywhere)
+	TArray<TSubclassOf<USmashCharacterState>> CharacterStates;
+
 
 #pragma endregion
+	
 #pragma region Input Data / Mapping Context
 public:
 	UPROPERTY()
@@ -94,6 +101,39 @@ private:
 	void BindInputMoveXAxisAndActions(UEnhancedInputComponent* EnhancedInputComponent);
 	void OnInputMoveX(const FInputActionValue& InputActionValue);
 #pragma endregion
+
+#pragma region InputY
+public:
+	DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FInputJumpEvent, float, InputMoveY);
+	void BindInputMoveYAxisAndActions(UEnhancedInputComponent* EnhancedInputComponent);
+	void OnInputMoveY(const FInputActionValue& InputActionValue);
+	
+	UPROPERTY()
+	FInputJumpEvent InputJumpEvent;
+protected:
+	UPROPERTY()
+	float InputMoveY = 0.f;
+	
+#pragma endregion
+
+#pragma region InputButtons
+public:
+	DECLARE_DYNAMIC_MULTICAST_DELEGATE(FInputSpecialPressed);
+	DECLARE_DYNAMIC_MULTICAST_DELEGATE(FInputSpecialReleased);
+	void OnSpecialPressed();
+	void OnSpecialReleased();
+	
+	void BindInputButtons(UEnhancedInputComponent* EnhancedInputComponent);
+
+	UPROPERTY()
+	FInputSpecialPressed InputSpecialPressed;
+	
+	UPROPERTY()
+	FInputSpecialReleased InputSpecialReleased;
+
+protected:
+
+#pragma endregion 
 
 #pragma region FollowTarget
 public:

@@ -13,11 +13,6 @@
 // Sets default values for this component's properties
 USmashCharacterState::USmashCharacterState()
 {
-	// Set this component to be initialized when the game starts, and to be ticked every frame.  You can turn these features
-	// off to improve performance if you don't need them.
-	PrimaryComponentTick.bCanEverTick = false;
-
-	// ...
 }
 
 ESmashCharacterStateID USmashCharacterState::GetStateID()
@@ -32,7 +27,10 @@ void USmashCharacterState::InitState(USmashCharacterStateMachine* InStateMachine
 	GEngine->AddOnScreenDebugMessage(-1, 3.f, FColor::Magenta, FString::Printf(TEXT("init State %d"), GetStateID()));
 }
 
-void USmashCharacterState::EnterState(ESmashCharacterStateID PreviousStateID){}
+void USmashCharacterState::EnterState(ESmashCharacterStateID PreviousStateID)
+{
+	PreviousState = PreviousStateID;
+}
 void USmashCharacterState::ExitState(ESmashCharacterStateID NextStateID){}
 void USmashCharacterState::StateTick(float DeltaTime){}
 
