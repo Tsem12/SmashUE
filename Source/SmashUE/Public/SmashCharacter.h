@@ -50,7 +50,6 @@ protected:
 
 #pragma region StateMachine
 public:
-	void CreateStates();
 	
 	void CreateStateMachine();
 
@@ -58,12 +57,16 @@ public:
 
 	void TickStateMachine(float DeltaTime) const; 
 
+	UPROPERTY(EditAnywhere)
+	TArray<TSubclassOf<USmashCharacterState>> CharacterStates;
+	
 protected:
+	UPROPERTY()
+	TArray<UObject*> InstanciatedStates;
+	
 	UPROPERTY(BlueprintReadOnly)
 	TObjectPtr<USmashCharacterStateMachine> StateMachine;
 
-	UPROPERTY(EditAnywhere)
-	TArray<TSubclassOf<USmashCharacterState>> CharacterStates;
 
 
 #pragma endregion
@@ -139,5 +142,22 @@ protected:
 public:
 	virtual FVector GetFollowPosition() override;
 	virtual bool IsFollowable() override;
+#pragma endregion
+
+#pragma region Collision
+
+protected:
+	virtual void NotifyActorEndOverlap(AActor* OtherActor) override;
+
+	
+#pragma endregion
+
+
+
+#pragma region Death
+	DECLARE_DYNAMIC_MULTICAST_DELEGATE(FDeathDelegate);
+
+	UPROPERTY(BlueprintAssignable)
+	FDeathDelegate DeathDelegateBluePrint;
 #pragma endregion 
 };

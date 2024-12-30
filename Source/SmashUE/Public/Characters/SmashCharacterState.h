@@ -29,7 +29,7 @@ public:
 	virtual void StateTick(float DeltaTime);
 	
 protected:
-	UPROPERTY()
+	UPROPERTY(BlueprintReadOnly)
 	TObjectPtr<ASmashCharacter> Character;
 
 	UPROPERTY()

@@ -33,7 +33,7 @@ protected:
 	TObjectPtr<ASmashCharacter> Character;
 
 	UPROPERTY()
-	TArray<USmashCharacterState*> AllStates;
+	TMap<ESmashCharacterStateID, USmashCharacterState*> AllStates;
 
 	UPROPERTY(BlueprintReadOnly)
 	ESmashCharacterStateID CurrentStateID;
@@ -41,7 +41,9 @@ protected:
 	UPROPERTY()
 	TObjectPtr<USmashCharacterState> CurrentState;
 	
-	void FindStates();
+	void CreateState();
 
 	void InitStates();
+		
+	bool IsStateOverrideByCharacter(ESmashCharacterStateID StateID);
 };

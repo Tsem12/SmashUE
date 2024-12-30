@@ -21,6 +21,7 @@ public:
 	virtual void EnterState(ESmashCharacterStateID PreviousStateID) override;
 	virtual void ExitState(ESmashCharacterStateID NextStateID) override;
 	virtual void StateTick(float DeltaTime) override;
+	void MoveHorizontaly();
 
 protected:
 	UPROPERTY(EditAnywhere)
@@ -37,4 +38,6 @@ protected:
 
 	UPROPERTY(EditAnywhere)
 	TObjectPtr<UAnimMontage> FallAnim; 
+	
+	
 };

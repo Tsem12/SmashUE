@@ -23,6 +23,9 @@ public:
 protected:
 	UPROPERTY()
 	TArray<ASmashCharacter*> CharacterInsideArena;
+	
+	UPROPERTY()
+	TArray<AArenaPlayerStart*> PlayerStartsPoints;
 
 private:
 	USmashCharacterInputData* LoadInputDataFromConfig();
@@ -30,9 +33,14 @@ private:
 	UInputMappingContext* LoadInputMappingContetFromConfig();
 	float LoadInputTresholdFromConfig();
 
-	void FindPlayerStartActorsInArena(TArray<AArenaPlayerStart*>& ResulActors);
+	void FindPlayerStartActorsInArena(TArray<AArenaPlayerStart*>& ResultActors);
 
 	void SpawnCharacters(const TArray<AArenaPlayerStart*>& SpawnPoints);
+
+	UFUNCTION(BlueprintCallable)
+	void RespawnCharacter(ASmashCharacter* Character);
+
+	AArenaPlayerStart* FindSafestSpawnPoint();
 	
 	TSubclassOf<ASmashCharacter> GetSmashCharacterClassFromInputType(EAutoReceiveInput::Type InputType) const;
 

@@ -17,7 +17,7 @@ void AMatchGameMode::BeginPlay()
 	Super::BeginPlay();
 	CreateAndInitPlayer();
 	
-	TArray<AArenaPlayerStart*> PlayerStartsPoints;
+
 	FindPlayerStartActorsInArena(PlayerStartsPoints);
 
 	for (AArenaPlayerStart* point : PlayerStartsPoints)
@@ -54,17 +54,18 @@ float AMatchGameMode::LoadInputTresholdFromConfig()
 }
 
 
-void AMatchGameMode::FindPlayerStartActorsInArena(TArray<AArenaPlayerStart*>& ResulActors)
+void AMatchGameMode::FindPlayerStartActorsInArena(TArray<AArenaPlayerStart*>& ResultActors)
 {
 	TArray<AActor*> FoundActor;
 	UGameplayStatics::GetAllActorsOfClass(GetWorld(), AArenaPlayerStart::StaticClass(), FoundActor);
 
+	
 	for (int i = 0; i < FoundActor.Num(); ++i)
 	{
 		AArenaPlayerStart* ArenaPlayerStartActor = Cast<AArenaPlayerStart>(FoundActor[i]);
 		if(ArenaPlayerStartActor == nullptr) continue;
 
-		ResulActors.Add(ArenaPlayerStartActor);
+		ResultActors.Add(ArenaPlayerStartActor);
 	}
 }
 
@@ -91,6 +92,32 @@ void AMatchGameMode::SpawnCharacters(const TArray<AArenaPlayerStart*>& SpawnPoin
 
 		CharacterInsideArena.Add(NewCharacter);
 	}
+}
+
+void AMatchGameMode::RespawnCharacter(ASmashCharacter* Character)
+{
+	Character->SetActorLocation(FindSafestSpawnPoint()->GetActorLocation());
+}
+
+AArenaPlayerStart* AMatchGameMode::FindSafestSpawnPoint()
+{
+	float FarestPlayerDistance = -100;
+	AArenaPlayerStart* PlayerStartResult = nullptr;
+	for (AArenaPlayerStart* Point : PlayerStartsPoints)
+	{
+		float Distance = 0;
+		for (ASmashCharacter* Character : CharacterInsideArena)
+		{
+			Distance += FVector::Distance(Point->GetActorLocation(), Character->GetActorLocation());	
+		}
+		
+		if(Distance > FarestPlayerDistance)
+		{
+			PlayerStartResult = Point;
+			FarestPlayerDistance = Distance;
+		}
+	}
+	return PlayerStartResult;
 }
 
 TSubclassOf<ASmashCharacter> AMatchGameMode::GetSmashCharacterClassFromInputType(

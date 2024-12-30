@@ -4,13 +4,14 @@
 #include "Characters/SmashCharacterStateMachine.h"
 
 #include "SmashCharacter.h"
+#include "Characters/SmashCharacterSettings.h"
 #include "Characters/SmashCharacterState.h"
 #include "Characters/SmashCharacterStateID.h"
 
 void USmashCharacterStateMachine::Init(ASmashCharacter* InCharacter)
 {
 	Character = InCharacter;
-	FindStates();
+	CreateState();
 	InitStates();
 
 	ChangeState(ESmashCharacterStateID::Idle);
@@ -48,31 +49,54 @@ void USmashCharacterStateMachine::ChangeState(ESmashCharacterStateID NextStateID
 
 USmashCharacterState* USmashCharacterStateMachine::GetState(ESmashCharacterStateID StateID)
 {
-	for (USmashCharacterState* State : AllStates)
+	for (TTuple<ESmashCharacterStateID, USmashCharacterState*> State : AllStates)
 	{
-		if(StateID == State->GetStateID())
-			return State;
+		if(StateID == State.Key)
+			return State.Value;
 	}
 	return nullptr;
 }
 
-void USmashCharacterStateMachine::FindStates()
+bool USmashCharacterStateMachine::IsStateOverrideByCharacter(ESmashCharacterStateID StateID)
 {
-	TArray<UActorComponent*> FoundComponents = Character->K2_GetComponentsByClass(USmashCharacterState::StaticClass());
-	for (UActorComponent* StateComponent : FoundComponents)
+	for (TSubclassOf<USmashCharacterState> State : Character->CharacterStates)
 	{
-		USmashCharacterState* State = Cast<USmashCharacterState>(StateComponent);
-		if(!State) continue;
-		if(State->GetStateID() == ESmashCharacterStateID::None) continue;
+		USmashCharacterState* CharacterState = State.GetDefaultObject();
+		if(!CharacterState) continue;
+		
+		if(CharacterState->GetStateID() == StateID)
+			return true;
+	}
+	return false;
+}
 
-		AllStates.Add(State);
+void USmashCharacterStateMachine::CreateState()
+{
+	const USmashCharacterSettings* SmashCharacterSettings = GetDefault<USmashCharacterSettings>();
+	for (TSubclassOf<USmashCharacterState> State : Character->CharacterStates)
+	{
+		USmashCharacterState* Obj = NewObject<USmashCharacterState>(this, State);
+		AllStates.Add(Obj->GetStateID(), Obj);
+		GEngine->AddOnScreenDebugMessage(-1, 3.f, FColor::Blue, FString::Printf(TEXT("Create State %d"), Obj ->GetStateID()));
+	}
+	for (TSubclassOf<USmashCharacterState> State : SmashCharacterSettings->GenericStates)
+	{
+		USmashCharacterState* CharacterState = State.GetDefaultObject();
+		if(!CharacterState) continue;
+		
+		if(!AllStates.Contains(CharacterState->GetStateID()))
+		{
+			USmashCharacterState* Obj = NewObject<USmashCharacterState>(this, State);
+			AllStates.Add(Obj->GetStateID(), Obj);
+			GEngine->AddOnScreenDebugMessage(-1, 3.f, FColor::Blue, FString::Printf(TEXT("Create Default State %d"), Obj ->GetStateID()));
+		}
 	}
 }
 
 void USmashCharacterStateMachine::InitStates()
 {
-	for (USmashCharacterState* State : AllStates)
+	for (TTuple<ESmashCharacterStateID, USmashCharacterState*> State : AllStates)
 	{
-		State->InitState(this);
+		State.Value->InitState(this);
 	}
 }

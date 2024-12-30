@@ -23,7 +23,6 @@ ASmashCharacter::ASmashCharacter()
 void ASmashCharacter::BeginPlay()
 {
 	Super::BeginPlay();
-	CreateStates();
 	CreateStateMachine();
 	InitStateMachine();
 	UCameraWorldSubsytem* CameraWorldSubsytem = Cast<UCameraWorldSubsytem>(GetWorld()->GetSubsystem<UCameraWorldSubsytem>());
@@ -155,18 +154,6 @@ void ASmashCharacter::RotateMeshUsingOrientX() const
 	GetMesh()->SetRelativeRotation(Rotation);
 }
 
-void ASmashCharacter::CreateStates()
-{
-	const USmashCharacterSettings* SmashCharacterSettings = GetDefault<USmashCharacterSettings>();
-	for (TSubclassOf<USmashCharacterState> State : SmashCharacterSettings->GenericStates)
-	{
-		NewObject<USmashCharacterState>(this, State);
-	}
-	for (TSubclassOf<USmashCharacterState> State : CharacterStates)
-	{
-		NewObject<USmashCharacterState>(this, State);
-	}
-}
 
 void ASmashCharacter::CreateStateMachine()
 {
@@ -209,6 +196,17 @@ FVector ASmashCharacter::GetFollowPosition()
 bool ASmashCharacter::IsFollowable()
 {
 	return true;
+}
+
+
+void ASmashCharacter::NotifyActorEndOverlap(AActor* OtherActor)
+{
+	Super::NotifyActorEndOverlap(OtherActor);
+	if(OtherActor->ActorHasTag("DeathBounds"))
+	{
+		GEngine->AddOnScreenDebugMessage(-1, 3.0f, FColor::Cyan, FString(TEXT("Mort")));
+		DeathDelegateBluePrint.Broadcast();
+	}
 }
 
 #pragma endregion 

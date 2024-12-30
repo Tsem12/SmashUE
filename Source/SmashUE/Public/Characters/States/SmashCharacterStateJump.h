@@ -19,7 +19,11 @@ public:
 	virtual void ExitState(ESmashCharacterStateID NextStateID) override;
 	virtual void StateTick(float DeltaTime) override;
 
+
 protected:
+
+	void MoveHorizontaly();
+	
 	UPROPERTY(EditAnywhere)
 	float JumpWalkSpeed = 400;
 	

@@ -55,6 +55,8 @@ void USmashCharacterStateWalk::EnterState(ESmashCharacterStateID PreviousStateID
 	Character->InputJumpEvent.AddDynamic(this,  &USmashCharacterStateWalk::OnInputMoveJump);
 }
 
+
+
 void USmashCharacterStateWalk::ExitState(ESmashCharacterStateID NextStateID)
 {
 	Super::ExitState(NextStateID);
